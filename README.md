@@ -3,8 +3,8 @@
 Hi, I am Zezhun Chen, the code used in the class will be uploaded here.
 
 # Some frequently used hot keys:
-Run the current line of the code: Ctrl + Enter
+Run the current line of the code: `Ctrl` + `Enter`
 
-Set up the working directory: 'Ctrl' + 'Shift' + 'H '
+Set up the working directory: `Ctrl` + `Shift` + `H`
 
-Comment the line which you don't wish to run: Ctrl + shift  + c
+Comment the line which you don't wish to run: `Ctrl` + `Shift`  + `C`
