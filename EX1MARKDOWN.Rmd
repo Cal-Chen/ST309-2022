@@ -1,0 +1,122 @@
+---
+title: "EX1markdown"
+author: "Zezhun Chen"
+date: "10/13/2021"
+output:
+  word_document: default
+  pdf_document: default
+  html_document: default
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+## R Markdown
+
+This is an R Markdown document. Markdown is a simple formatting syntax for authoring HTML, PDF, and MS Word documents. For more details on using R Markdown see <http://rmarkdown.rstudio.com>.
+
+When you click the **Knit** button a document will be generated that includes both content as well as the output of any embedded R code chunks within the document. You can embed an R code chunk like this:
+
+```{r cars}
+summary(cars)
+```
+
+## Including Plots
+
+You can also embed plots, for example:
+
+```{r pressure,echo=FALSE}
+plot(pressure)
+```
+
+Note that the `echo = FALSE` parameter was added to the code chunk to prevent printing of the R code that generated the plot.
+
+## Setting up
+Remove all the objects in the environment
+read the data
+skip, the number of lines of the data file to skip before beginning to read data.
+row.names: giving the column of the table which contains the row names, 
+```{r}
+rm(list = ls())
+forbes2000 = read.csv("Forbes2000.csv", row.names = 1,skip=3)
+head(forbes2000)
+```
+
+# (a)
+Find the top 10 ranked companies, the companies with the 10 maximum sales, and the companies
+with the market value greater than 174 billion USD
+```{r}
+attach(forbes2000)
+name[rank <= 10]
+```
+
+```{r}
+name[marketvalue >= 174]
+```
+
+```{r}
+name[sales > sort(sales,decreasing = TRUE)[10]]
+```
+
+# (b)
+Plot the histograms for marketvalue and log(marketvalue)
+```{r}
+par(mfrow=c(1,2))
+hist(marketvalue,main='histogram of market values',col=1)
+hist(log(marketvalue),main='histogram of log market values',col=2)
+```
+
+# (c)
+Compare the outcomes from mean(profits) and mean(profits, na.rm=T)
+```{r}
+mean(profits)
+mean(profits,na.rm = TRUE)
+```
+
+# (d)
+Median profit for the companies in US and UK separately
+```{r}
+median(profits[country=='United States'],na.rm = TRUE)
+```
+```{r}
+median(profits[country=='United Kingdom'],na.rm=TRUE)
+```
+
+# (e)
+Find all German companies with negative profit
+```{r}
+name[country == 'Germany'& profits < 0]
+```
+
+# (f)
+To which business category do most of the Bermuda island companies belong
+```{r}
+table(category[country =='Bermuda'])
+```
+
+![A cat picture from google](cat.jpg)
+
+# (g) 
+For the 50 companies with the highest profits, plot profits against assets, using some suitable transformation for each variable if appropriate.
+```{r}
+profits_sort <- sort(profits,decreasing = TRUE)[1:50]
+asset_sort <- assets[profits >= profits_sort[50] & !is.na(profits)]
+```
+
+cex the size of point
+cex.lab the size of label
+pch the style of points
+```{r}
+plot(log(asset_sort),log(profits_sort),
+     xlab='log Assets',ylab = 'log profits',
+     cex.lab=1.5,pch=20)
+```
+
+remember to detach when you finish analysis with the data set
+```{r}
+detach()
+```
+
+
+
