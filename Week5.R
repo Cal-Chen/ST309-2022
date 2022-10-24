@@ -201,7 +201,7 @@ nvec <- c(5,10,50)
 lambdavec <- c(1,3,10)
 r <- 10
 
-rpois(10,c(1,10))
+poisSW(nvec, lambdavec, r)
 
 #############################################
 # X1Y1Z1 X2Y2Z2 X3Y3Z3 ..... X(n_t*r) Y(n_t*r) Z(n_t*r)
@@ -212,7 +212,30 @@ rpois(10,c(1,10))
 #  1   3   10  1   3  10          1   3   10
 #  5   5   5   5   5   5 .......  50  50  50
 
-poisSW(nvec, lambdavec, r)
 
-rpois(5,lambda = c(1,2))
+# It's totally fine if you don't understand the above method
+# One can simply use double loop to conduct this simulation experiemnt
+# Althugh it is not the most efficient way
+
+poisSW2 <- function(nvec, lambdavec, r){
+  
+  numn <- length(nvec);numlam <- length(lambdavec)
+  res <- matrix(0,numlam,numn)
+  
+  for(i in 1:numlam){
+    for(j in 1:numn){
+      # Generate random samples for each combination of lambda and n 
+      sam <- matrix(rpois(nvec[j]*r,lambdavec[i]),r,nvec[j])
+      # calculate the statistics for each n samples (each row)
+      u_tmp <- apply(sam,1,mean)
+      # calculate the test statistics based on U data
+      res[i,j] <- shapiro.p(u_tmp)
+    }
+  }
+  colnames(res) <- as.character(nvec)
+  rownames(res) <- as.character(lambdavec)
+  return(res)
+}
+
+poisSW2(nvec, lambdavec,r)
 
