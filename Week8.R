@@ -3,9 +3,10 @@
 rm(list = ls())
 library(MASS)
 
+?Boston
 attach(Boston)
 str(Boston)
-?Boston
+
 ?lm
 
 lm1.Boston=lm(medv~lstat)
@@ -19,25 +20,34 @@ lm1.Boston$rank
 confint(lm1.Boston)
 
 # To access the fitted values
+# y = beta0 + beta1 * lstat  + epsilon
 fitted1 <- lm1.Boston$fitted.values
 fitted2 <- predict(lm1.Boston)
 
 head(fitted1)
 head(fitted2)
 
+# residual
+head(medv - fitted1)
+head(lm1.Boston$residuals)
+
+# Prediction on expected value of y 
 # confidence interval for fitted value (95% by default)
 # y  = beta0 + beta1 x 
 predict(lm1.Boston, data.frame(lstat=c(5,10,15)), interval="confidence")
 
+# prediction on individual value of y
 # confidence interval for predicted value (larger interval)
 # y = beta0 + beta1 x + epsilon
 predict(lm1.Boston, data.frame(lstat=c(5,10,15)), interval="prediction")
 
 # draw a fitted line across the data
-plot(lstat, medv); abline(lm1.Boston,lty=2,col=2)
+plot(lstat, medv)
+abline(lm1.Boston,lty=2,col=2)
 
 # draw diagnostics plots
 par(mfrow=c(2,2))
+
 plot(lm1.Boston)
 # residual plots are clearly not patternless!
 
@@ -83,12 +93,14 @@ summary(lm4.Boston)
 plot(lm4.Boston)
 # linear model may not be a good choice in this situation
 
+
 # ---- step wise regression with 'step' ---- #
 lm0.Boston = lm(medv~1)
+mean(medv)
 summary(lm0.Boston)
 
 # The selected model will be 'between' ls0.Boston and ls2.Boston.
-step.Boston=step(lm0.Boston, scope=list(upper=lm2.Boston))
+step.Boston = step(lm0.Boston, scope=list(upper=lm2.Boston))
 summary(step.Boston) # it selects the the same predictors as in lm4.Boston
 
 # actually step Boston is the same as lm4.Boston
@@ -100,6 +112,7 @@ detach(Boston)
 # --- Regression with qualitative Predictors --- #
 data(Carseats,package = 'ISLR')
 str(Carseats)
+?ISLR::Carseats
 
 # interaction terms Income:Advertising and Price:Age in the model
 # Income x Advertising and Price x Age
@@ -118,6 +131,9 @@ High=as.factor(ifelse(Sales<=8, "No", "Yes"))
 Carseats2=data.frame(Carseats, High)
 tree.carseats=tree(High~.-Sales, Carseats2)
 summary(tree.carseats)
+
+plot(tree.carseats)
+text(tree.carseats, pretty=0)
 
 # apply CV method to determine the tree size
 ?cv.tree
@@ -139,7 +155,3 @@ plot(cv.carseats$size,cv.carseats$dev,type ='b')
 prune.carseats=prune.misclass(tree.carseats, best=12)
 plot(prune.carseats)
 text(prune.carseats, pretty=0)
-
-
-
-
